@@ -70,7 +70,7 @@ type cacheItem struct {
 var ipCache = make(map[string]cacheItem)
 var cacheLock sync.RWMutex
 
-const ttl = 30 * time.Second
+const ttl = 30 * time.Second // 30 seconds cache TTL
 
 func ResolveIP(host string) string {
 	cacheLock.RLock()

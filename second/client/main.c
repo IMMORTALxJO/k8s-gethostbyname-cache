@@ -34,18 +34,18 @@ int dns_cache__send_and_receive_unix_socket_message(const char *socket_path, con
 
     sock = socket(AF_UNIX, SOCK_STREAM, 0);
     if (sock == -1) {
-        perror("socket");
+        perror("dns_cache socket");
         return -1;
     }
 
     timeout.tv_sec = 0;
-    timeout.tv_usec = 100000;
+    timeout.tv_usec = 500000; // 500ms timeout
     if (setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
-        perror("setsockopt failed\n");
+        perror("dns_cache setsockopt failed\n");
     }
 
     if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)) < 0) {
-        perror("setsockopt failed\n");
+        perror("dns_cache setsockopt failed\n");
     }
 
     memset(&addr, 0, sizeof(struct sockaddr_un));
@@ -53,20 +53,20 @@ int dns_cache__send_and_receive_unix_socket_message(const char *socket_path, con
     strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path) - 1);
 
     if (connect(sock, (struct sockaddr*)&addr, sizeof(struct sockaddr_un)) == -1) {
-        perror("connect");
+        perror("dns_cache connect");
         close(sock);
         return -1;
     }
 
     if (write(sock, message, strlen(message)) == -1) {
-        perror("write");
+        perror("dns_cache write");
         close(sock);
         return -1;
     }
 
     numBytes = read(sock, response, DNS_CACHE__BUFFER_SIZE - 1);
     if (numBytes == -1) {
-        perror("read");
+        perror("dns_cache read");
         close(sock);
         return -1;
     }
