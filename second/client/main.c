@@ -12,14 +12,6 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-typedef struct dns_cache_entry {
-    char hostname[256];
-    struct hostent result;
-    time_t timestamp;
-} dns_cache_entry_t;
-
-dns_cache_entry_t global_dns_cache = {0};
-
 #define DNS_CACHE__BUFFER_SIZE 1024
 
 static int (*original_gethostbyname_r)(const char *, struct hostent *, char *, size_t, struct hostent **, int *) = NULL;

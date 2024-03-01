@@ -6,8 +6,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./dev/default.conf:/etc/nginx/conf.d/default.conf
-      - ./dev:/var/www/html
+      - ../.dev/default.conf:/etc/nginx/conf.d/default.conf
+      - ../.dev:/var/www/html
     depends_on:
       - php
     networks:
@@ -20,9 +20,9 @@ services:
     environment:
       LD_PRELOAD: /dns-cache.so
     volumes:
-      - ./dev:/var/www/html
+      - ../.dev:/var/www/html
       - ./dns_cache:/dns_cache
-      - ./dev/zzz-docker.conf:/usr/local/etc/php-fpm.d/zzz-docker.conf
+      - ../.dev/zzz-docker.conf:/usr/local/etc/php-fpm.d/zzz-docker.conf
     networks:
       - app-network
   
