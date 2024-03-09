@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ../.dev/default.conf:/etc/nginx/conf.d/default.conf
+      - ../.dev:/var/www/html
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+  php:
+    image: client:dev
+    build:
+      context: ./xdp_udp_logger
+    environment:
+      LD_PRELOAD: /dns-cache.so
+    volumes:
+      - ../.dev:/var/www/html
+      - ../.dev/zzz-docker.conf:/usr/local/etc/php-fpm.d/zzz-docker.conf
+    networks:
+      - app-network
+  
+networks:
+  app-network:
+    driver: bridge
